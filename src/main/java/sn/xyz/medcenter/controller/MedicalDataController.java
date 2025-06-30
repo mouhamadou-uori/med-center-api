@@ -684,4 +684,66 @@ public class MedicalDataController {
                         .series(new ArrayList<>())
                         .build());
     }
+
+    /**
+     * Récupère tous les emails d'un professionnel de santé (envoyés et reçus)
+     * Accessible au professionnel concerné et aux administrateurs
+     */
+    @GetMapping("/professionnels/{professionnelId}/emails")
+    // @PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSIONNEL', 'RADIOLOGUE') and @securityService.isCurrentProfessionnel(#professionnelId))")
+    public ResponseEntity<List<EmailLog>> getEmailsByProfessionnelId(@PathVariable Integer professionnelId) {
+        log.info("Requête: récupération des emails du professionnel avec l'ID: {}", professionnelId);
+        
+        List<EmailLog> emails = medicalDataService.getEmailsByProfessionnelId(professionnelId);
+        
+        log.info("Nombre d'emails trouvés pour le professionnel {}: {}", professionnelId, emails.size());
+        return ResponseEntity.ok(emails);
+    }
+
+    /**
+     * Récupère les emails récents d'un professionnel de santé
+     * Accessible au professionnel concerné et aux administrateurs
+     */
+    @GetMapping("/professionnels/{professionnelId}/emails/recent")
+    // @PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSIONNEL', 'RADIOLOGUE') and @securityService.isCurrentProfessionnel(#professionnelId))")
+    public ResponseEntity<List<EmailLog>> getRecentEmailsByProfessionnelId(
+            @PathVariable Integer professionnelId,
+            @RequestParam(defaultValue = "30") int days) {
+        log.info("Requête: récupération des emails récents ({} jours) du professionnel avec l'ID: {}", days, professionnelId);
+        
+        List<EmailLog> emails = medicalDataService.getRecentEmailsByProfessionnelId(professionnelId, days);
+        
+        log.info("Nombre d'emails récents trouvés pour le professionnel {}: {}", professionnelId, emails.size());
+        return ResponseEntity.ok(emails);
+    }
+
+    /**
+     * Récupère les emails envoyés par un professionnel de santé
+     * Accessible au professionnel concerné et aux administrateurs
+     */
+    @GetMapping("/professionnels/{professionnelId}/emails/sent")
+    // @PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSIONNEL', 'RADIOLOGUE') and @securityService.isCurrentProfessionnel(#professionnelId))")
+    public ResponseEntity<List<EmailLog>> getSentEmailsByProfessionnelId(@PathVariable Integer professionnelId) {
+        log.info("Requête: récupération des emails envoyés par le professionnel avec l'ID: {}", professionnelId);
+        
+        List<EmailLog> emails = medicalDataService.getSentEmailsByProfessionnelId(professionnelId);
+        
+        log.info("Nombre d'emails envoyés trouvés pour le professionnel {}: {}", professionnelId, emails.size());
+        return ResponseEntity.ok(emails);
+    }
+
+    /**
+     * Récupère les emails reçus par un professionnel de santé
+     * Accessible au professionnel concerné et aux administrateurs
+     */
+    @GetMapping("/professionnels/{professionnelId}/emails/received")
+    // @PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSIONNEL', 'RADIOLOGUE') and @securityService.isCurrentProfessionnel(#professionnelId))")
+    public ResponseEntity<List<EmailLog>> getReceivedEmailsByProfessionnelId(@PathVariable Integer professionnelId) {
+        log.info("Requête: récupération des emails reçus par le professionnel avec l'ID: {}", professionnelId);
+        
+        List<EmailLog> emails = medicalDataService.getReceivedEmailsByProfessionnelId(professionnelId);
+        
+        log.info("Nombre d'emails reçus trouvés pour le professionnel {}: {}", professionnelId, emails.size());
+        return ResponseEntity.ok(emails);
+    }
 }

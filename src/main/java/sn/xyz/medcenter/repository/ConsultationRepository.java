@@ -1,7 +1,6 @@
 package sn.xyz.medcenter.repository;
 
 import sn.xyz.medcenter.model.Consultation;
-import sn.xyz.medcenter.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +20,4 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Inte
     @Query("SELECT COUNT(DISTINCT c.patient.id) FROM Consultation c WHERE c.professionnel.id = :professionnelId")
     long countDistinctPatientsByProfessionnelId(@Param("professionnelId") Integer professionnelId);
 
-    @Query("SELECT DISTINCT c.patient FROM Consultation c WHERE c.professionnel.id = :professionnelId")
-    List<Patient> findDistinctPatientsByProfessionnelId(@Param("professionnelId") Integer professionnelId);
 }

@@ -126,4 +126,61 @@ INSERT IGNORE INTO prescription (id, date_emission, date_expiration, medicaments
 (4, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 10 DAY), INTERVAL 7 DAY), 'Sirop pour la toux', '1 cuillère 3 fois par jour.', false, 6),
 (5, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 5 DAY), 'Doliprane enfant', 'Selon le poids, toutes les 6h.', true, 12);
 
+-- Charger les données de test pour les conseils médicaux et pathologies
+SOURCE donnees-test-medical.sql;
+
+-- Insertion de données de test pour les emails
+INSERT IGNORE INTO email_log (id, resend_id, to_email, from_email, subject, status, error_message, sent_at, created_at) VALUES
+-- Emails entre professionnels de santé
+(1, 'resend_001', 'diopamath@esp.sn', 'admin@medcenter.xyz', 'Rapport de consultation - Patient Adja SUZANNE LY', 'SUCCESS', NULL, '2024-05-10 14:30:00', '2024-05-10 14:30:00'),
+(2, 'resend_002', 'admin@medcenter.xyz', 'diopamath@esp.sn', 'Demande urgente de matériel radiologique', 'SUCCESS', NULL, '2024-05-11 09:15:00', '2024-05-11 09:15:00'),
+(3, 'resend_003', 'amina.dath@example.com', 'diopamath@esp.sn', 'Résultats d\'imagerie - Patient Ousmane BA', 'SUCCESS', NULL, '2024-05-12 16:45:00', '2024-05-12 16:45:00'),
+(4, 'resend_004', 'papemoussambengue@esp.sn', 'admin@medcenter.xyz', 'Planning des consultations - Semaine 20', 'SUCCESS', NULL, '2024-05-13 08:00:00', '2024-05-13 08:00:00'),
+(5, 'resend_005', 'diopamath@esp.sn', 'papemoussambengue@esp.sn', 'Re: Planning des consultations - Modification demandée', 'SUCCESS', NULL, '2024-05-13 08:30:00', '2024-05-13 08:30:00'),
+
+-- Emails de notification aux patients
+(6, 'resend_006', 'adja.ly@example.com', 'diopamath@esp.sn', 'Rappel de rendez-vous - Consultation radiologie', 'SUCCESS', NULL, '2024-05-14 10:00:00', '2024-05-14 10:00:00'),
+(7, 'resend_007', 'ousmane.ba@example.com', 'amina.dath@example.com', 'Résultats d\'analyses disponibles', 'SUCCESS', NULL, '2024-05-15 11:30:00', '2024-05-15 11:30:00'),
+(8, 'resend_008', 'aissatou.diallo@example.com', 'diopamath@esp.sn', 'Instructions pré-examen IRM', 'SUCCESS', NULL, '2024-05-16 14:20:00', '2024-05-16 14:20:00'),
+
+-- Emails de rapports et communications administratives
+(9, 'resend_009', 'admin@medcenter.xyz', 'diopamath@esp.sn', 'Rapport mensuel d\'activité - Radiologie', 'SUCCESS', NULL, '2024-05-17 17:20:00', '2024-05-17 17:20:00'),
+(10, 'resend_010', 'admin@medcenter.xyz', 'amina.dath@example.com', 'Nouveau protocole d\'examens médicaux', 'SUCCESS', NULL, '2024-05-18 09:45:00', '2024-05-18 09:45:00'),
+(11, 'resend_011', 'papemoussambengue@esp.sn', 'diopamath@esp.sn', 'Formation continue - Nouvelles techniques d\'imagerie', 'SUCCESS', NULL, '2024-05-19 13:15:00', '2024-05-19 13:15:00'),
+
+-- Emails d'urgence et communications critiques
+(12, 'resend_012', 'diopamath@esp.sn', 'amina.dath@example.com', 'URGENT: Anomalie détectée - Patient Cheikh SENE', 'SUCCESS', NULL, '2024-05-20 16:00:00', '2024-05-20 16:00:00'),
+(13, 'resend_013', 'amina.dath@example.com', 'admin@medcenter.xyz', 'Re: URGENT - Prise en charge immédiate nécessaire', 'SUCCESS', NULL, '2024-05-20 16:15:00', '2024-05-20 16:15:00'),
+
+-- Emails de coordination entre services
+(14, 'resend_014', 'admin@medcenter.xyz', 'papemoussambengue@esp.sn', 'Coordination inter-services - Cas complexe Patient KA', 'SUCCESS', NULL, '2024-05-21 10:30:00', '2024-05-21 10:30:00'),
+(15, 'resend_015', 'diopamath@esp.sn', 'admin@medcenter.xyz', 'Demande de consultation spécialisée - Cardiologie', 'SUCCESS', NULL, '2024-05-22 08:45:00', '2024-05-22 08:45:00'),
+
+-- Emails de suivi et relances
+(16, 'resend_016', 'cheikh.sene@example.com', 'diopamath@esp.sn', 'Suivi post-examen - Résultats et recommandations', 'SUCCESS', NULL, '2024-05-23 14:10:00', '2024-05-23 14:10:00'),
+(17, 'resend_017', 'mariama.ka@example.com', 'amina.dath@example.com', 'Rappel: Prise de médicaments et contrôle', 'SUCCESS', NULL, '2024-05-24 09:20:00', '2024-05-24 09:20:00'),
+
+-- Emails techniques et maintenance
+(18, 'resend_018', 'admin@medcenter.xyz', 'diopamath@esp.sn', 'Maintenance préventive équipements - Planning', 'SUCCESS', NULL, '2024-05-25 15:00:00', '2024-05-25 15:00:00'),
+(19, 'resend_019', 'diopamath@esp.sn', 'admin@medcenter.xyz', 'Rapport de dysfonctionnement - Scanner salle 2', 'SUCCESS', NULL, '2024-05-26 11:40:00', '2024-05-26 11:40:00'),
+
+-- Emails de formation et mise à jour
+(20, 'resend_020', 'papemoussambengue@esp.sn', 'diopamath@esp.sn', 'Mise à jour protocoles sécurité radiologique', 'SUCCESS', NULL, '2024-05-27 13:30:00', '2024-05-27 13:30:00'),
+(21, 'resend_021', 'admin@medcenter.xyz', 'amina.dath@example.com', 'Formation: Nouvelles directives qualité', 'SUCCESS', NULL, '2024-05-28 10:15:00', '2024-05-28 10:15:00'),
+
+-- Emails avec erreurs pour tester les cas d'échec
+(22, 'resend_022', 'email.invalide@domaine.inexistant', 'diopamath@esp.sn', 'Test envoi - Adresse invalide', 'ERROR', 'Adresse email destinataire invalide', NULL, '2024-05-29 14:00:00'),
+(23, NULL, 'lamine.thiam@example.com', 'admin@medcenter.xyz', 'Convocation consultation de suivi', 'PENDING', NULL, NULL, '2024-05-30 09:00:00'),
+(24, 'resend_024', 'diopamath@esp.sn', 'serveur.indisponible@test.com', 'Rapport technique hebdomadaire', 'ERROR', 'Serveur de messagerie temporairement indisponible', NULL, '2024-05-30 16:30:00'),
+
+-- Emails récents (derniers jours)
+(25, 'resend_025', 'admin@medcenter.xyz', 'diopamath@esp.sn', 'Statistiques d\'activité - Mai 2024', 'SUCCESS', NULL, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(26, 'resend_026', 'amina.dath@example.com', 'papemoussambengue@esp.sn', 'Collaboration inter-disciplinaire - Cas Patient DIALLO', 'SUCCESS', NULL, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(27, 'resend_027', 'diopamath@esp.sn', 'admin@medcenter.xyz', 'Demande congés - Période estivale', 'SUCCESS', NULL, DATE_SUB(NOW(), INTERVAL 4 HOUR), DATE_SUB(NOW(), INTERVAL 4 HOUR)),
+(28, NULL, 'papemoussambengue@esp.sn', 'diopamath@esp.sn', 'Réunion équipe médicale - Ordre du jour', 'PENDING', NULL, NULL, DATE_SUB(NOW(), INTERVAL 1 HOUR)),
+
+-- Emails de notifications système
+(29, 'resend_029', 'diopamath@esp.sn', 'system@medcenter.xyz', 'Sauvegarde données patient effectuée', 'SUCCESS', NULL, DATE_SUB(NOW(), INTERVAL 12 HOUR), DATE_SUB(NOW(), INTERVAL 12 HOUR)),
+(30, 'resend_030', 'admin@medcenter.xyz', 'system@medcenter.xyz', 'Rapport sécurité mensuel - Accès système', 'SUCCESS', NULL, DATE_SUB(NOW(), INTERVAL 6 HOUR), DATE_SUB(NOW(), INTERVAL 6 HOUR));
+
 -- SET FOREIGN_KEY_CHECKS = 1;

@@ -34,6 +34,34 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     actif BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS Message (
+    id BIGINT PRIMARY KEY,
+    expediteur_id BIGINT NOT NULL,
+    destinataire_id BIGINT NOT NULL,
+    contenu TEXT NOT NULL,
+    dateEnvoi DATE NOT NULL,
+    lu BOOLEAN DEFAULT FALSE,
+    piecesJointes TEXT, -- Liste de fichiers (peut être stockée comme JSON ou texte délimité)
+    envoye BOOLEAN DEFAULT TRUE,
+    
+    -- Clés étrangères
+    CONSTRAINT fk_message_utilisateur_expediteur FOREIGN KEY (expediteur_id) REFERENCES utilisateur(id),
+    CONSTRAINT fk_message_utilisateur_destinataire FOREIGN KEY (destinataire_id) REFERENCES utilisateur(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Table pour le log des emails envoyés
+CREATE TABLE IF NOT EXISTS email_log (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    resend_id VARCHAR(100),
+    to_email VARCHAR(255) NOT NULL,
+    from_email VARCHAR(255) NOT NULL,
+    subject VARCHAR(500) NOT NULL,
+    status ENUM('SUCCESS', 'ERROR', 'PENDING') NOT NULL,
+    error_message TEXT,
+    sent_at DATETIME,
+    created_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS serveur_dicom (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     url_orthanc VARCHAR(255) NOT NULL,

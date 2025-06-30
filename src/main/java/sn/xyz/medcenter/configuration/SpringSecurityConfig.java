@@ -59,6 +59,11 @@ public class SpringSecurityConfig {
             // Autorise le endpoint de login sans authentification
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("api/medical/conseils/**").permitAll()
+                .requestMatchers( "/api/medical/pathologies/**").permitAll()
+                .requestMatchers( "api/medical/categories/**").permitAll()
+                .requestMatchers( "api/medical/professionnels/**").permitAll()
+                .requestMatchers("/api/emails/**").permitAll()
                 .requestMatchers("/api/auth/test").hasRole("ADMIN")
                 // Ajoute ici d'autres endpoints publics si besoin
                 .anyRequest().authenticated()

@@ -11,6 +11,7 @@ import sn.xyz.medcenter.dto.StatPeriodeDTO;
 import sn.xyz.medcenter.model.*;
 import sn.xyz.medcenter.repository.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class MedicalDataService {
     private final ProfessionnelSanteRepository professionnelSanteRepository;
     private final HopitalRepository hopitalRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final EmailLogRepository emailLogRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -389,5 +391,103 @@ public class MedicalDataService {
             return getDicomUrlByHopitalId(hopital.getId());
         }
         return null;
+    }
+
+    /**
+     * Récupère tous les emails d'un professionnel de santé
+     * @param professionnelId ID du professionnel de santé
+     * @return Liste des emails envoyés et reçus par le professionnel
+     */
+    @Transactional(readOnly = true)
+    public List<EmailLog> getEmailsByProfessionnelId(Integer professionnelId) {
+        log.info("Récupération des emails pour le professionnel avec l'ID: {}", professionnelId);
+        
+        Optional<ProfessionnelSante> professionnel = professionnelSanteRepository.findById(professionnelId);
+        if (professionnel.isEmpty()) {
+            log.warn("Aucun professionnel trouvé avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        String email = professionnel.get().getEmail();
+        if (email == null || email.trim().isEmpty()) {
+            log.warn("Aucun email configuré pour le professionnel avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        return emailLogRepository.findEmailsByUserEmail(email);
+    }
+
+    /**
+     * Récupère les emails récents d'un professionnel de santé
+     * @param professionnelId ID du professionnel de santé
+     * @param days Nombre de jours à récupérer (par défaut 30)
+     * @return Liste des emails récents
+     */
+    @Transactional(readOnly = true)
+    public List<EmailLog> getRecentEmailsByProfessionnelId(Integer professionnelId, int days) {
+        log.info("Récupération des emails récents ({} jours) pour le professionnel avec l'ID: {}", days, professionnelId);
+        
+        Optional<ProfessionnelSante> professionnel = professionnelSanteRepository.findById(professionnelId);
+        if (professionnel.isEmpty()) {
+            log.warn("Aucun professionnel trouvé avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        String email = professionnel.get().getEmail();
+        if (email == null || email.trim().isEmpty()) {
+            log.warn("Aucun email configuré pour le professionnel avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        LocalDateTime startDate = LocalDateTime.now().minusDays(days);
+        return emailLogRepository.findEmailsByUserEmailSince(email, startDate);
+    }
+
+    /**
+     * Récupère les emails envoyés par un professionnel de santé
+     * @param professionnelId ID du professionnel de santé
+     * @return Liste des emails envoyés
+     */
+    @Transactional(readOnly = true)
+    public List<EmailLog> getSentEmailsByProfessionnelId(Integer professionnelId) {
+        log.info("Récupération des emails envoyés par le professionnel avec l'ID: {}", professionnelId);
+        
+        Optional<ProfessionnelSante> professionnel = professionnelSanteRepository.findById(professionnelId);
+        if (professionnel.isEmpty()) {
+            log.warn("Aucun professionnel trouvé avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        String email = professionnel.get().getEmail();
+        if (email == null || email.trim().isEmpty()) {
+            log.warn("Aucun email configuré pour le professionnel avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        return emailLogRepository.findByFromEmailOrderByCreatedAtDesc(email);
+    }
+
+    /**
+     * Récupère les emails reçus par un professionnel de santé
+     * @param professionnelId ID du professionnel de santé
+     * @return Liste des emails reçus
+     */
+    @Transactional(readOnly = true)
+    public List<EmailLog> getReceivedEmailsByProfessionnelId(Integer professionnelId) {
+        log.info("Récupération des emails reçus par le professionnel avec l'ID: {}", professionnelId);
+        
+        Optional<ProfessionnelSante> professionnel = professionnelSanteRepository.findById(professionnelId);
+        if (professionnel.isEmpty()) {
+            log.warn("Aucun professionnel trouvé avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        String email = professionnel.get().getEmail();
+        if (email == null || email.trim().isEmpty()) {
+            log.warn("Aucun email configuré pour le professionnel avec l'ID: {}", professionnelId);
+            return new ArrayList<>();
+        }
+        
+        return emailLogRepository.findByToEmailOrderByCreatedAtDesc(email);
     }
 }
